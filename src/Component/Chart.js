@@ -1,5 +1,6 @@
-import React, {Component, useState} from 'react';
+import React, {Component} from 'react';
 import CanvasJSReact from '../canvasjs.react';
+import {Button} from 'react-bootstrap';
 
 const CanvasJS = CanvasJSReact.CanvasJS;
 const CanvasJSChart = CanvasJSReact.CanvasJSChart
@@ -9,45 +10,49 @@ export default class Chart extends Component{
         super();
         this.state = {
             age: props.age,
-            currentSaved: props.currentSaved,
-            yearlyCont: props.yearlyCont,
-            rate: props.rate/100,
             baseData: [],
             investedData: [],
-            total: 0
-
-        }
+            total: 0,
+        };
+        this.calculate = this.calculate.bind(this);
     }
     componentDidMount(){
-      let years = 65 - this.state.age;
-      let nextBase = this.state.currentSaved;
+      this.calculate();
+    }
+
+    calculate(){
+      let years = 65 - parseInt(this.props.age);
       let accumulatedTotal = 0;
+      let accumulatedBase = parseFloat(this.props.currentSaved);
+      let rate = (parseFloat(this.props.rate)/100)
+      let yearlyCont = parseFloat(this.props.yearlyCont);
+      let accumulatedInterest = 0;
       let d = new Date();
       let currentYear = d.getFullYear();
+      let runningBase = accumulatedBase;
+      let bData = [];
+      let iData = [];
       for(let i = 1; i <= years; i++){
-        let interest = (nextBase * this.state.rate);
-        let yearTotal = nextBase + interest;
-        this.state.baseData.push({label: currentYear + (i - 1), y: nextBase});
-        this.state.investedData.push({label: currentYear + (i - 1), y: interest});
-        nextBase = yearTotal + this.state.yearlyCont;
-        accumulatedTotal += yearTotal;
+        let interest = runningBase * rate;
+        accumulatedInterest += interest;
+        bData.push({label: currentYear + (i - 1), y: accumulatedBase});
+        iData.push({label: currentYear + (i - 1), y: accumulatedInterest});
+        accumulatedBase = accumulatedBase + yearlyCont;
+        runningBase = accumulatedBase + interest;
       }
-      this.setState({total: accumulatedTotal});
+      accumulatedTotal = accumulatedBase + accumulatedInterest;
+      this.setState({baseData: bData});
+      this.setState({investedData: iData});
+      this.setState({age: years});
     }
-    // shouldComponentUpdate(props){
-    //   const diffAge = this.props.age !== props.age;
-    //   const diffSaved = this.props.currentSaved !== props.currentSaved;
-    //   const diffCont = this.props.yearlyCont !== props.yearlyCont;
-    //   const diffRate = this.props.rate !== props.rate;
-    //   return diffAge || diffSaved || diffCont || diffRate;
-    // }
+
     render(){
        
     const options = {
         animationEnabled: true,
         exportEnabled: true,
         title: {
-          text: `Compounded Interest over ${65-this.state.age} years`,
+          text: `Compounded Interest over ${this.state.age} years`,
           fontFamily: "verdana"
         },
         axisY: {
@@ -81,6 +86,7 @@ export default class Chart extends Component{
         return(
           <div>
               <CanvasJSChart options = {options}/>
+              <Button variant="success" size="lg" onClick={ () => this.calculate()}>Calculate</Button>
           </div>  
         );
     }

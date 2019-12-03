@@ -4,19 +4,12 @@ import {Navbar, NavbarBrand, Container, Row, Col, Form, Card, Button} from 'reac
 import Chart from './Component/Chart.js';
 
 function App() {
+
   let [currentAge, setCurrentAge] = useState(18);
-  let [currentSaved, setSaved] = useState(5000.00);
+  let [currentSaved, setSaved] = useState(0);
   let [annualCon, setAnnualCon] = useState(6000.00);
   let [ror, setROR] = useState(6);
   
-  const graphBuilder = () => {
-    console.log(currentAge);
-    console.log(currentSaved);
-    console.log(annualCon);
-    console.log(ror);
-  }
-
-
   return (
     <div className="App">
       <Navbar bg="dark" variant="dark">
@@ -44,20 +37,18 @@ function App() {
                 <Form.Control type="number" value={ror} step={0.1} placeholder="Approximate yearly Return" onChange={(ev) => setROR(ev.target.value)}></Form.Control>
               </Form.Group>
             </Form>
-            <Button variant="success" size="lg" onClick={graphBuilder}>Calculate</Button>
-          </Col>
-          <Col sm={8}>
-            <Chart age={currentAge} currentSaved={currentSaved} yearlyCont={annualCon} rate={ror}></Chart>
-          </Col>
-        </Row>
-        <br></br>
-        <Card>
+            <Card>
           <Card.Header>Assumptions</Card.Header>
           <Card.Body>
             Retirement Age is 65 Years old<br/>
             Rate of Return is Constant. Average is around 6%
           </Card.Body>
         </Card>
+          </Col>
+          <Col sm={8}>
+            <Chart age={currentAge} currentSaved={currentSaved} yearlyCont={annualCon} rate={ror}></Chart>
+          </Col>
+        </Row>
       </Container>
     </div>
   );
