@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import CanvasJSReact from '../canvasjs.react';
-import {Button} from 'react-bootstrap';
+import {Button, Row, Col} from 'react-bootstrap';
 
 const CanvasJS = CanvasJSReact.CanvasJS;
 const CanvasJSChart = CanvasJSReact.CanvasJSChart
@@ -44,6 +44,7 @@ export default class Chart extends Component{
       this.setState({baseData: bData});
       this.setState({investedData: iData});
       this.setState({age: years});
+      this.setState({total: accumulatedTotal});
     }
 
     render(){
@@ -86,7 +87,15 @@ export default class Chart extends Component{
         return(
           <div>
               <CanvasJSChart options = {options}/>
-              <Button variant="success" size="lg" onClick={ () => this.calculate()}>Calculate</Button>
+              <Row>
+                <Col sm={4}>
+                  <Button variant="success" size="lg" onClick={ () => this.calculate()}>Calculate</Button>
+                </Col>
+                <Col sm={8}>
+                  ${this.state.total.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}(USD) after {this.state.age} years.
+                </Col>
+              </Row>
+              
           </div>  
         );
     }

@@ -41,7 +41,8 @@ function App() {
           <Card.Header>Assumptions</Card.Header>
           <Card.Body>
             Retirement Age is 65 Years old<br/>
-            Rate of Return is Constant. Average is around 6%
+            Rate of Return is Constant. Average is around 6%<br/>
+            Starting with $0, and maxing out contributions
           </Card.Body>
         </Card>
           </Col>
